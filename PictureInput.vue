@@ -1,7 +1,7 @@
 <template>
   <div ref="container" id="picture-input" class="picture-input">
     <div v-if="!supportsUpload" v-html="strings.upload"></div>
-    <div v-else-if="supportsPreview">
+    <div v-else-if="supportsPreview && showPreview">
       <div
         class="preview-container"
         :style="{
@@ -116,6 +116,10 @@
 export default {
   name: "picture-input",
   props: {
+    showPreview: {
+      type: [Boolean],
+      default: true
+    },
     width: {
       type: [String, Number],
       default: Number.MAX_SAFE_INTEGER,
@@ -268,7 +272,7 @@ export default {
           window.screen.deviceXDPI / window.screen.logicalXDPI
       );
       const canvas = this.$refs.previewCanvas;
-      if (canvas.getContext) {
+      if (canvas && canvas.getContext) {
         this.context = canvas.getContext("2d");
         this.context.scale(this.pixelRatio, this.pixelRatio);
       }
@@ -696,7 +700,6 @@ export default {
 
 <style scoped>
 .picture-input {
-  width: 100%;
   margin: 0 auto;
   text-align: center;
 }
@@ -738,7 +741,6 @@ export default {
   line-height: 1.5;
 }
 button {
-  margin: 1em 0.25em;
   cursor: pointer;
 }
 input[type="file"] {
